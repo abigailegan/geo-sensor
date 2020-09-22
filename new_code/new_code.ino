@@ -232,12 +232,12 @@ void FACTORY_RESET() {
 
 }
 
-double measure_CO() {
+double measure_CO() { //(just reading voltage from the sensor)
   //Return concentration of CO in ppm
   //https://www.spec-sensors.com/wp-content/uploads/2016/10/ULPSM-CO-968-001.pdf
   double Vgas = double(analogRead(CO_Vgas)) * double(5.0 / 1023.0); //Analog voltage indicating CO concentration
   double Vref = double(analogRead(CO_Vref)) * double(5.0 / 1023.0); //Analog reference voltage
-  double Vgas0 = Vref + voffset;
+  double Vgas0 = Vref + voffset; //(y = mx +b; get the values from the regression code)
   double TIA_Gain = 100;
   double M = sensitivity * TIA_Gain * pow(10, -6);
   double ppm = (Vgas - Vgas0) / M;
