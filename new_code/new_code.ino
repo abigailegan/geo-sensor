@@ -93,13 +93,33 @@ float(slope_CO2); // final regressed slope of CO2 curve
 float(inter_CO); //final regressed intercept of CO curve
 float(inter_CO2); //final regressed intercept of C2 curve
 
-unsigned int EEPROM_read_double(int ee, double& value){
-//For reading from the EEPROM (non-volatile memory) of the arduino
-  byte* p = (byte*)(void*)&value;
-  unsigned int i;
-  for (i = 0; i < sizeof(value); i++)
-    *p++ = EEPROM.read(ee++);
-  return i;
+//These functions are for reading and writing to EEPROM
+float readFloat(unsigned int addr)
+{
+    union
+    {
+        byte b[4];
+        float f;
+    } data;
+    for(int i = 0; i < 4; i++)
+    {
+        data.b[i] = EEPROM.read(addr+i);
+    }
+    return data.f;
+}
+
+void writeFloat(unsigned int addr, float x)
+{
+    union
+    {
+        byte b[4];
+        float f;
+    } data;
+    data.f = x;
+    for(int i = 0; i < 4; i++)
+    {
+        EEPROM.write(addr+i, data.b[i]);
+    }
 }
 
 double get_Number_From_Serial(){
@@ -163,6 +183,19 @@ void regressionLoop () {
     inter_CO = line_regress_inter(CO_conc1,CO_conc2,CO_conc3,COvolt1,COvolt2,COvolt3);
     inter_CO2 = line_regress_inter(CO2_conc1,CO2_conc2,CO2_conc3,CO2volt1,CO2volt2,CO2volt3);
 
+    writeFloat(0, slope_CO);
+    writeFloat(4, slope_CO2);
+    writeFloat(8, inter_CO);
+    writeFloat(12, inter_CO2);
+
+    testFunction();
+}
+
+void testFunction() {
+    Serial.print("value of slope_CO" + readFloat(0));
+    Serial.print("value of slope_CO2" + readFloat(4));
+    Serial.print("value of inter_CO" + readFloat(8));
+    Serial.print("value of inter_CO2" + readFloat(12));
 }
 
 //This function calculates the composition of CO or CO2 in the gas mix
@@ -266,9 +299,9 @@ float find_flow(float(x)){ //This function will find the flow of the gas mixing 
 }
 
 void calibrate() {
-  //This function will interract with the GUI and incorperate the calibration code. 
-  //The current code was for testing the connection with a basic gui
-  LED_BLUE(); //indicates calibration mode
+    //This function will interract with the GUI and incorperate the calibration code.
+    //The current code was for testing the connection with a basic gui
+    // LED_BLUE(); //indicates calibration mode
 
     double n1 = 0;
     n1 = get_Number_From_Serial();
@@ -276,7 +309,7 @@ void calibrate() {
     n2 = get_Number_From_Serial();
     
     Serial.println("Number 1 = " + String(n1));
-    for (int i = 0; i < 10; i++){
+    for (int i = 0; i < 10; i++) {
       LED_ON();
       delay(500);
       LED_BLUE();
@@ -490,9 +523,6 @@ void sensors_off()
   digitalWrite(Fan_Power, LOW);
   digitalWrite(SD_Power, HIGH);
 }
-
-
-
 
 void loop() {
 
