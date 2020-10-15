@@ -5,13 +5,13 @@
 #include <SPI.h>
 #include <SD.h> //For reading and writing to SD card
 #include <Wire.h>
-#include <SparkFun_SCD30_Arduino_Library.h>
+//#include <SparkFun_SCD30_Arduino_Library.h>
 #include <EEPROM.h>
 #include <String.h>
 #include <Wire.h>
 #include <math.h>
 #include <SoftwareSerial.h>
-#include "RTClib.h"
+//#include "RTClib.h"
 #include <LinearRegression.h>
 
 File myFile; //File for writing to SD card
