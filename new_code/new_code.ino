@@ -372,60 +372,56 @@ void regressionLoop () {
     // put your main code here, to run repeatedly:
 
     Serial.println("\n\n\n\n\n press the ENTER key to start calibration or switch the calibration setting to off and restart the deivice to exit calibration mode \n");
-    //User for Input
-    while (Serial.available() == 0) {
-    // Wait for User to Input Data
-    }
-    dummy = Serial.parseInt(); //Read the data the user has input
+    while(!Serial.available())delay(10);
+    dummy = Serial.parseFloat(); //Read the data the user has input
+    Serial.println(dummy);
+    delay(1000);
 
     //get initial CO and CO2 values
     Serial.println("Enter PPM of CO in the gas tank and press enter\n");
-    while (Serial.available() == 0) {
-    // Wait for User to Input Data
-    }
-    CO_Tank = Serial.parseInt(); //Read the data the user has input
+    while(!Serial.available())delay(10);
+    CO_Tank = Serial.parseFloat(); //Read the data the user has input
+    Serial.println(CO_Tank);
+    delay(1000);
+
     Serial.println("Enter PPM of CO2 in the gas tank and press enter\n");
-    while (Serial.available() == 0) {
-    // Wait for User to Input Data
-    }
-    CO2_Tank = Serial.parseInt(); //Read the data the user has input
+    while(!Serial.available())delay(10);
+    CO2_Tank = Serial.parseFloat(); //Read the data the user has input
+    Serial.println(CO2_Tank);
+    delay(1000);
 
     //steady state time entry only for prototype
-    Serial.println("Enter time to reach steady state\n");
-    //User for Input
-    while (Serial.available() == 0) {
-    // Wait for User to Input Data
-    }
-    dummy = Serial.parseInt(); //Read the data the user has input
+    Serial.println("Enter time to reach steady state (seconds)\n");
+    while(!Serial.available())delay(10);
+    steady_state_time = 1000*Serial.parseFloat(); //Read the data the user has input
+    Serial.println(dummy);
+    delay(1000);
 
     //MEASUREMENT 1
     Serial.println("Turn gas on, record heights and press ENTER once heights are recorded\n");
-    Serial.read();
+    while(!Serial.available())delay(10);
+    dummy = Serial.parseFloat(); //Read the data the user has input
+    delay(steady_state_time);    
+    
     //float(var11); //Height of CO reported by User in GUI
     //float(var12); //Height of both flows reported by User in GUI
     //float(var13); //Height of air reported by User in GUI
     Serial.println("Type Height of CO\n");
-    //User for Input
-    while (Serial.available() == 0) {
-    // Wait for User to Input Data
-    }
+    while(!Serial.available())delay(10);
     var11 = Serial.parseInt(); //Read the data the user has input
+    
     Serial.println("Type Height of both flows\n");
-    //User for Input
-    while (Serial.available() == 0) {
-    // Wait for User to Input Data
-    }
+    while(!Serial.available())delay(10);
     var12 = Serial.parseInt(); //Read the data the user has input
+    
     Serial.println("Type Height of air\n");
-    //User for Input
-    while (Serial.available() == 0) {
-    // Wait for User to Input Data
-    }
+    while(!Serial.available())delay(10);
     var13 = Serial.parseInt(); //Read the data the user has inpu
+    
     //measure C02
     CO2volt1 = measure_CO2();
     //measure C0
-    COvolt1 = measure_CO2();
+    COvolt1 = measure_CO();
 
     //wait for device to reach steady state
     delay(steady_state_time);
